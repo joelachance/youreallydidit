@@ -9,10 +9,12 @@ import {
   SignedOut,
   UserButton
 } from '@clerk/nextjs'
+import { Switch } from '@radix-ui/themes';
 import './globals.css'
 
 export default function Home() {
   const [ posts, setPosts ] = useState([]);
+  const [ nsfw, setNsfw] = useState(window.localStorage.getItem('nsfw') == 'true');
 
   useEffect(() => {
     (async () => {
@@ -25,25 +27,46 @@ export default function Home() {
     })();
   }, [])
 
+  const toggleNsfw = () => {
+    const nextNsfw = !nsfw;
+    const nextNsfwStr = nextNsfw.toString();
+    setNsfw(nextNsfw);
+    window.localStorage.setItem('nsfw', nextNsfwStr);
+  }
+
 
   return (
-    <div className="grid grid-cols-8 gap-4 min-h-screen bg-[#001219] text-offwhite font-code">
+    <div className="grid grid-cols-8 gap-4 min-h-screen text-offwhite font-code bg-[#001219]">
       <SignedOut>
         <div className="col-start-2 col-span-6 flex flex-row justify-center self-center">
           <SignInButton>
-            <button className="bg-mint text-dark h-20 w-64 rounded-md">Sign In, Bitch</button>
+            <button className="bg-mint text-dark h-20 w-64 rounded-md">{nsfw ? 'Sign In, Bitch' : 'Sign In'}</button>
           </SignInButton>
         </div>
       </SignedOut>
       <SignedIn>
         <div className="flex flex-row justify-center items-center self-center col-start-2 col-span-5">
-          <CreatePost posts={posts} />
+          <CreatePost nsfw={nsfw} posts={posts} />
         </div>
         <div className="flex flex-row justify-center items-start sm:col-start-7 md:col-start-8 col-span-2 m-5">
           <UserButton />
         </div>
       </SignedIn>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+      <footer className="row-start-3 flex items-center m-4">
+          <div className="flex-col">
+            <div>
+              <Switch
+                onCheckedChange={toggleNsfw}
+                defaultChecked={false}
+                checked={nsfw}
+                variant="surface"
+                radius="medium"
+                size="3"
+                color="red"
+                className="m-1 mr-4 before:bg-mint" />
+            </div>
+            <div className="text-xs m-1">NSFW MODE</div>
+          </div>
       </footer>
     </div>
   );

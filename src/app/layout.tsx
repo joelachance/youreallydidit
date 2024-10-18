@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from '@clerk/nextjs'
+import { Theme } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -21,7 +23,9 @@ export default function RootLayout({
           <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
         </head>
         <body>
-          {children}
+          <Theme>
+            {children}
+          </Theme>
         </body>
       </html>
     </ClerkProvider>
