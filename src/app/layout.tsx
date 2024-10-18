@@ -5,7 +5,7 @@ import "@radix-ui/themes/styles.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "You Fucking Did It!",
+  title: "You Did It!",
   description: "Created for you. Write it all down, every last detail!",
 };
 

@@ -17,6 +17,7 @@ const config: Config = {
       },
       fontFamily: {
         code: ["IBM Plex Mono", "system-ui"],
+        sans: ["system-ui"],
       }
     },
   },

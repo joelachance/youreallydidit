@@ -1,12 +1,13 @@
 'use client';
 import { useState } from "react";
-import { addPost } from "./db/posts";
-import { ShowPosts } from "@/show-posts";
+import { addPost, getPosts } from "./db/posts";
+import { ShowPosts } from "./show-posts";
 
-export function CreatePost({ posts, nsfw }) {
+export function CreatePost({ posts, nsfw, setPosts }) {
     const [post, setPost] = useState('');
     const [success, setSuccess] = useState(false);
 
+    
     const create = async (data): Promise<void> => {
         const achievement = data.get('achievement');
         const res = await addPost(achievement);
@@ -16,6 +17,10 @@ export function CreatePost({ posts, nsfw }) {
             // flash the success icon
             setSuccess(true);
             setTimeout(() => setSuccess(false), 2000);
+            (async () => {
+              const dbPosts = await getPosts();
+              await setPosts(dbPosts);
+            })();
         }
     }
     return (
@@ -31,8 +36,8 @@ export function CreatePost({ posts, nsfw }) {
                     onChange={e => setPost(e.target.value)}
                     placeholder={nsfw ? 'Tell us what the fuck happened' : 'Tell us about it'}
                     className="
-                        h-24
-                        w-4/5
+                        h-20
+                        w-full
                         m-4
                         p-1
                         bg-dark
@@ -72,7 +77,7 @@ export function CreatePost({ posts, nsfw }) {
 
                 </button>
             </form>
-           <ShowPosts posts={posts} />
+            <ShowPosts posts={posts} />
         </div>
     );
 }

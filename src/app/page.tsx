@@ -46,14 +46,14 @@ export default function Home() {
       </SignedOut>
       <SignedIn>
         <div className="flex flex-row justify-center items-center self-center col-start-2 col-span-5">
-          <CreatePost nsfw={nsfw} posts={posts} />
+          <CreatePost nsfw={nsfw} posts={posts} setPosts={setPosts} />
         </div>
         <div className="flex flex-row justify-center items-start sm:col-start-7 md:col-start-8 col-span-2 m-5">
           <UserButton />
         </div>
       </SignedIn>
-      <footer className="row-start-3 flex items-center m-4">
-          <div className="flex-col">
+      <footer className="row-start-3 flex items-center m-4 relative">
+          <div className="flex-col fixed">
             <div>
               <Switch
                 onCheckedChange={toggleNsfw}
@@ -65,7 +65,7 @@ export default function Home() {
                 color="red"
                 className="m-1 mr-4 before:bg-mint" />
             </div>
-            <div className="text-xs m-1">NSFW MODE</div>
+            <div className="text-xs m-1">NSFW</div>
           </div>
       </footer>
     </div>
