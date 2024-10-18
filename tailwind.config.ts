@@ -11,7 +11,13 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        offwhite: "#E9D8A6",
+        dark: "#001219",
+        mint: "#94D2BD",
       },
+      fontFamily: {
+        code: ["IBM Plex Mono", "system-ui"],
+      }
     },
   },
   plugins: [],
