@@ -1,20 +1,17 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { getUser } from './db/users';
-import { getPosts } from './db/posts';
-import { CreatePost } from './post';
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
-} from '@clerk/nextjs'
-import { Switch } from '@radix-ui/themes';
-import './globals.css'
+"use client";
+import { useEffect, useState } from "react";
+import { getUser } from "./db/users";
+import { getPosts } from "./db/posts";
+import { CreatePost } from "./post";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Switch } from "@radix-ui/themes";
+import "./globals.css";
 
 export default function Home() {
-  const [ posts, setPosts ] = useState([]);
-  const [ nsfw, setNsfw] = useState(window.localStorage.getItem('nsfw') == 'true');
+  const [posts, setPosts] = useState([]);
+  const [nsfw, setNsfw] = useState(
+    window.localStorage.getItem("nsfw") == "true"
+  );
 
   useEffect(() => {
     (async () => {
@@ -25,22 +22,23 @@ export default function Home() {
       const dbPosts = await getPosts();
       await setPosts(dbPosts);
     })();
-  }, [])
+  }, []);
 
   const toggleNsfw = () => {
     const nextNsfw = !nsfw;
     const nextNsfwStr = nextNsfw.toString();
     setNsfw(nextNsfw);
-    window.localStorage.setItem('nsfw', nextNsfwStr);
-  }
-
+    window.localStorage.setItem("nsfw", nextNsfwStr);
+  };
 
   return (
     <div className="grid grid-cols-8 gap-4 min-h-screen text-offwhite font-code bg-[#001219]">
       <SignedOut>
         <div className="col-start-2 col-span-6 flex flex-row justify-center self-center">
           <SignInButton>
-            <button className="bg-mint text-dark h-20 w-64 rounded-md">{nsfw ? 'Sign In, Bitch' : 'Sign In'}</button>
+            <button className="bg-mint text-dark h-20 w-64 rounded-md">
+              {nsfw ? "Sign In, Bitch" : "Sign In"}
+            </button>
           </SignInButton>
         </div>
       </SignedOut>
@@ -53,20 +51,21 @@ export default function Home() {
         </div>
       </SignedIn>
       <footer className="row-start-3 flex m-4 relative">
-          <div className="flex-col place-content-end">
-            <div>
-              <Switch
-                onCheckedChange={toggleNsfw}
-                defaultChecked={false}
-                checked={nsfw}
-                variant="surface"
-                radius="medium"
-                size="3"
-                color="red"
-                className="m-1 mr-4 before:bg-mint" />
-            </div>
-            <div className="text-xs m-2">NSFW</div>
+        <div className="flex-col place-content-end">
+          <div>
+            <Switch
+              onCheckedChange={toggleNsfw}
+              defaultChecked={false}
+              checked={nsfw}
+              variant="surface"
+              radius="medium"
+              size="3"
+              color="red"
+              className="m-1 mr-4 before:bg-mint"
+            />
           </div>
+          <div className="text-xs m-2">NSFW</div>
+        </div>
       </footer>
     </div>
   );
