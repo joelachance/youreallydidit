@@ -1,30 +1,34 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getUser } from "./db/users";
 import { getPosts } from "./db/posts";
 import { CreatePost } from "./post";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Switch } from "@radix-ui/themes";
+import { Post } from "./types";
 import "./globals.css";
 
-export default function Home() {
-  const [posts, setPosts] = useState([]);
-  const [nsfw, setNsfw] = useState(
+// Type for the actual response from getPosts()
+type PostsResponse = Array<Post> | [];
+
+export default function Home(): React.ReactElement {
+  const [posts, setPosts] = useState<PostsResponse>([]);
+  const [nsfw, setNsfw] = useState<boolean>(
     window.localStorage.getItem("nsfw") == "true"
   );
 
   useEffect(() => {
-    (async () => {
+    (async (): Promise<void> => {
       await getUser();
     })();
 
-    (async () => {
+    (async (): Promise<void> => {
       const dbPosts = await getPosts();
       await setPosts(dbPosts);
     })();
   }, []);
 
-  const toggleNsfw = () => {
+  const toggleNsfw = (): void => {
     const nextNsfw = !nsfw;
     const nextNsfwStr = nextNsfw.toString();
     setNsfw(nextNsfw);
@@ -32,41 +36,60 @@ export default function Home() {
   };
 
   return (
-    <div className="grid grid-cols-8 gap-4 min-h-screen text-offwhite font-code bg-[#001219]">
+    <div className="flex justify-center min-h-screen text-offwhite font-code bg-[#001219]">
       <SignedOut>
-        <div className="col-start-2 col-span-6 flex flex-row justify-center self-center">
-          <SignInButton>
-            <button className="bg-mint text-dark h-20 w-64 rounded-md">
-              {nsfw ? "Sign In, Bitch" : "Sign In"}
-            </button>
-          </SignInButton>
+        <div className="flex flex-col md:flex-row justify-center md:justify-normal h-screen w-5/6 md:w-3/5 mt-10">
+          <div className="text-3xl my-3">
+            {nsfw ? "YOU FUCKING DID IT." : "YOU REALLY DID IT."}
+          </div>
+          <div className="flex flex-row justify-center items-center">
+            <SignInButton>
+              <button className="bg-mint text-dark h-20 w-64 rounded-md">
+                {nsfw ? "Sign In, Bitch" : "Sign In"}
+              </button>
+            </SignInButton>
+          </div>
         </div>
       </SignedOut>
       <SignedIn>
-        <div className="flex flex-row justify-start items-start self-start col-start-2 col-span-5 mt-10">
-          <CreatePost nsfw={nsfw} posts={posts} setPosts={setPosts} />
-        </div>
-        <div className="flex flex-row justify-center items-start sm:col-start-7 md:col-start-8 col-span-2 m-5">
-          <UserButton />
+        <div className="flex flex-col justify-between w-5/6 md:w-3/5">
+          <div className="flex flex-col justify-between min-h-screen">
+            <div className="w-full flex flex-row justify-center">
+              <CreatePost nsfw={nsfw} posts={posts} setPosts={setPosts} />
+            </div>
+            <footer className="flex w-5/6 md:w-3/5 my-4 self-center">
+              <div>
+                <div className="my-2">
+                  <UserButton />
+                </div>
+                <div>
+                  <Switch
+                    onCheckedChange={toggleNsfw}
+                    defaultChecked={false}
+                    checked={nsfw}
+                    variant="surface"
+                    radius="medium"
+                    size="3"
+                    color="red"
+                    className="my-1 mr-4 before:bg-mint"
+                  />
+                </div>
+                <div className="text-xs my-2">NSFW</div>
+                <div className="text-xs text-gray-400 mt-2 flex items-center">
+                  <span>&copy; {new Date().getFullYear()} m0thership</span>
+                  <span className="mx-2">•</span>
+                  <a
+                    href="mailto:y0ur3allydidit@gmail.com"
+                    className="hover:text-mint transition-colors"
+                  >
+                    y0ur3allydidit@gmail.com
+                  </a>
+                </div>
+              </div>
+            </footer>
+          </div>
         </div>
       </SignedIn>
-      <footer className="row-start-3 flex m-4 relative">
-        <div className="flex-col place-content-end">
-          <div>
-            <Switch
-              onCheckedChange={toggleNsfw}
-              defaultChecked={false}
-              checked={nsfw}
-              variant="surface"
-              radius="medium"
-              size="3"
-              color="red"
-              className="m-1 mr-4 before:bg-mint"
-            />
-          </div>
-          <div className="text-xs m-2">NSFW</div>
-        </div>
-      </footer>
     </div>
   );
 }

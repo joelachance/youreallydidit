@@ -10,6 +10,7 @@ async function main() {
       posts: {
         create: {
           content: 'I wrote a book',
+          workPost: false,
         },
       },
     },
@@ -24,9 +25,11 @@ async function main() {
         create: [
           {
             content: 'I built a car',
+            workPost: true,
           },
           {
             content: 'I walked my dog',
+            workPost: false,
           },
         ],
       },

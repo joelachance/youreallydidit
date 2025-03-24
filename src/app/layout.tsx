@@ -5,8 +5,8 @@ import "@radix-ui/themes/styles.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "You Did It!",
-  description: "Created for you. Write it all down, every last detail!",
+  title: "you really did it",
+  description: "log your wins",
 };
 
 export default function RootLayout({
